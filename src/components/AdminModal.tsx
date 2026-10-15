@@ -31,6 +31,9 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   onToggleSubscription,
   onResetDefaults,
 }) => {
+  const ADMIN_PASSWORD = "Boas1014";
+const [isAuthenticated, setIsAuthenticated] = useState(false);
+const [passwordInput, setPasswordInput] = useState("");
   const [activeTab, setActiveTab] = useState<'items' | 'gallery' | 'config'>('items');
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
   const [isCreating, setIsCreating] = useState<boolean>(false);
