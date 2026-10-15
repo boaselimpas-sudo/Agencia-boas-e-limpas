@@ -1,0 +1,6 @@
+{
+  "name": "Boas e limpas - Cardápio Digital & Pedidos",
+  "description": "Aplicativo oficial de cardápio digital, reservas e pedidos da agência Boas e limpas com envio direto para WhatsApp, pagamentos M-Pesa/e-Mola e QR Code integrado.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
