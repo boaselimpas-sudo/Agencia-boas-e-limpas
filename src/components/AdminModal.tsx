@@ -305,7 +305,31 @@ const [passwordInput, setPasswordInput] = useState("");
     onSaveConfig(agencyForm);
     showNotification('Configurações da agência e e-Mola salvas!');
   };
-
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordInput === "Boas1014") {
+      setIsAuthenticated(true);
+      setPasswordError("");
+    } else {
+      setPasswordError("Senha incorreta!");
+    }
+  };
+  if (!isOpen) return null;
+  if (!isAuthenticated) {
+    return (
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4">
+        <div className="bg-zinc-900 border border-zinc-800 p-8 rounded-2xl w-full max-w-sm">
+          <h2 className="text-white text-xl font-bold mb-2">Acesso Restrito</h2>
+          <form onSubmit={handlePasswordSubmit} className="space-y-4">
+            <input type="password" value={passwordInput} onChange={(e) => setPasswordInput(e.target.value)} placeholder="Senha" className="w-full bg-zinc-800 border border-zinc-800 px-4 py-3 text-white rounded-lg" autoFocus />
+            {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
+            <button type="submit" className="w-full bg-white text-black font-bold py-3 rounded-lg">Entrar</button>
+            <button type="button" onClick={onClose} className="w-full text-zinc-400 text-sm">Fechar</button>
+          </form>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="relative w-full max-w-3xl bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
