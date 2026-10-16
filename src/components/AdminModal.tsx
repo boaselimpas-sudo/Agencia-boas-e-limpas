@@ -6,7 +6,7 @@ const AdminModal = ({ isOpen, onClose }: any) => {
   const [passwordInput, setPasswordInput] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
-  const handlePasswordSubmit = (e: React.FormEvent) => {
+      const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (passwordInput.trim().toLowerCase() === 'boas1014') {
       setIsAuthenticated(true);
