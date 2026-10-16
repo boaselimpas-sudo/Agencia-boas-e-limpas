@@ -32,7 +32,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   onResetDefaults,
 }) => {
   const ADMIN_PASSWORD = "Boas1014";
-const [isAuthenticated, setIsAuthenticated] = useState(false);
+const [isAuthenticated, setIsAuthenticated] = const [isAuthenticated, setIsAuthenticated] = useState(false);
 const [passwordInput, setPasswordInput] = useState("");
   const [activeTab, setActiveTab] = useState<'items' | 'gallery' | 'config'>('items');
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
