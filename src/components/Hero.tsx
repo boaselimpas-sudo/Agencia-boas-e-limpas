@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Send, MapPin, MessageCircle, ShieldCheck, Clock, CreditCard, Sparkles, Upload } from 'lucide-react';
+import { BookOpen, Send, MapPin, MessageCircle, ShieldCheck, Clock, CreditCard, Sparkles, Upload, Home } from 'lucide-react';
 import { AgencyConfig } from '../types.ts';
 
 interface HeroProps {
@@ -32,9 +32,9 @@ export const Hero: React.FC<HeroProps> = ({
             {/* Clean metadata badge */}
             <div className="flex items-center gap-2 text-xs font-medium text-red-500 uppercase tracking-widest mb-3">
               <Sparkles className="w-4 h-4 text-red-500" />
-              <span>Catálogo Oficial & Reservas VIP</span>
+              <span>Catálogo Oficial & Atendimento ao Domicílio</span>
               <span aria-hidden="true">·</span>
-              <span className="text-zinc-400">Maputo, MZ</span>
+              <span className="text-zinc-400">Maputo & Matola</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white font-serif leading-[1.1] mb-4 text-balance">
@@ -45,7 +45,7 @@ export const Hero: React.FC<HeroProps> = ({
             </h1>
 
             <p className="text-base sm:text-lg text-zinc-300 leading-relaxed mb-6 max-w-2xl">
-              Catálogo selecionado com atendimento de altíssimo padrão, charme, elegância e discrição total. Acesso exclusivo mediante subscrição mensal via e-Mola.
+              Catálogo selecionado com atendimento de altíssimo padrão, charme, elegância e discrição total. Atendimento exclusivo ao domicílio e espaço escolhido pelo cliente mediante subscrição mensal de 1000 MT.
             </p>
 
             {/* Requested Main Action Buttons (Substituted 'Ver Cardápio' -> 'Ver Catálogo') */}
@@ -68,13 +68,13 @@ export const Hero: React.FC<HeroProps> = ({
                 <span>Fazer Pedido / Reserva</span>
               </button>
 
-              {/* Button 3: Localização */}
+              {/* Button 3: Ao Domicílio & Espaço Escolhido */}
               <button
                 onClick={onNavigateToLocation}
                 className="w-full h-14 px-6 bg-zinc-900 hover:bg-zinc-800 active:bg-zinc-700 text-zinc-100 border border-zinc-800 hover:border-zinc-700 font-semibold rounded-xl flex items-center justify-center gap-3 transition-all active:scale-[0.98] text-base cursor-pointer"
               >
-                <MapPin className="w-5 h-5 text-red-500" />
-                <span>Localização & Suítes</span>
+                <Home className="w-5 h-5 text-red-500" />
+                <span>Ao Domicílio / No Seu Espaço</span>
               </button>
 
               {/* Button 4: WhatsApp */}

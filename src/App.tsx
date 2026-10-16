@@ -3,6 +3,7 @@ import { Header } from './components/Header.tsx';
 import { Hero } from './components/Hero.tsx';
 import { MenuSection } from './components/MenuSection.tsx';
 import { GallerySection } from './components/GallerySection.tsx';
+import { TestimonialsSection } from './components/TestimonialsSection.tsx';
 import { LocationSection } from './components/LocationSection.tsx';
 import { ContactSection } from './components/ContactSection.tsx';
 import { Footer } from './components/Footer.tsx';
@@ -11,6 +12,7 @@ import { CartModal } from './components/CartModal.tsx';
 import { AdminModal } from './components/AdminModal.tsx';
 import { VideoModal } from './components/VideoModal.tsx';
 import { SubscriptionModal } from './components/SubscriptionModal.tsx';
+import { AgeGate } from './components/AgeGate.tsx';
 import { MenuItem, CartItem, AgencyConfig, GalleryMediaItem, SubscriptionStatus } from './types.ts';
 import { INITIAL_AGENCY_CONFIG, INITIAL_MENU_ITEMS, INITIAL_GALLERY_ITEMS } from './data/initialData.ts';
 import { saveMediaFile } from './utils/mediaStorage.ts';
@@ -101,9 +103,15 @@ export default function App() {
   // Modal states
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [adminTab, setAdminTab] = useState<'items' | 'gallery' | 'config'>('items');
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
   const [activeVideoItemId, setActiveVideoItemId] = useState<string | null>(null);
+
+  const handleOpenAdmin = (tab: 'items' | 'gallery' | 'config' = 'items') => {
+    setAdminTab(tab);
+    setIsAdminOpen(true);
+  };
 
   // Active section for navigation
   const [activeSection, setActiveSection] = useState('inicio');
@@ -125,6 +133,17 @@ export default function App() {
       console.error('Failed to save subscription to localStorage', e);
     }
   }, [subscription]);
+
+  // Automatically expire subscription if 30 days elapsed
+  useEffect(() => {
+    if (subscription.isSubscribed && subscription.expiresAt && Date.now() > subscription.expiresAt) {
+      setSubscription({ isSubscribed: false });
+    }
+  }, [subscription]);
+
+  const daysRemaining = subscription.expiresAt
+    ? Math.max(0, Math.ceil((subscription.expiresAt - Date.now()) / (1000 * 60 * 60 * 24)))
+    : 0;
 
   // Subscription Actions
   const handleActivateSubscription = (phone: string, ref: string) => {
@@ -277,9 +296,12 @@ export default function App() {
     }
   };
 
-  // Smooth navigation (substituting cardapio -> catalogo)
+  // Smooth navigation (substituting cardapio -> catalogo, localizacao -> domicilio)
   const handleNavigate = (sectionId: string) => {
-    const targetId = sectionId === 'cardapio' ? 'catalogo' : sectionId;
+    let targetId = sectionId === 'cardapio' ? 'catalogo' : sectionId;
+    if (targetId === 'localizacao') {
+      targetId = 'domicilio';
+    }
     setActiveSection(targetId);
     if (targetId === 'inicio') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -301,13 +323,17 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans">
+      {/* 18+ Age Gate Verification */}
+      <AgeGate />
+
       {/* Top Header */}
       <Header
         config={config}
         cartCount={totalCartCount}
         isSubscribed={subscription.isSubscribed}
+        daysRemaining={daysRemaining}
         onOpenCart={() => setIsCartOpen(true)}
-        onOpenAdmin={() => setIsAdminOpen(true)}
+        onOpenAdmin={() => handleOpenAdmin('items')}
         onOpenSubscription={() => setIsSubscriptionModalOpen(true)}
         activeSection={activeSection}
         onNavigate={handleNavigate}
@@ -321,11 +347,11 @@ export default function App() {
             config={config}
             onNavigateToMenu={() => handleNavigate('catalogo')}
             onNavigateToCart={() => setIsCartOpen(true)}
-            onNavigateToLocation={() => handleNavigate('localizacao')}
+            onNavigateToLocation={() => handleNavigate('domicilio')}
           />
         </div>
 
-        {/* Section 2: Catálogo Completo (com bloqueio e-Mola se não subscrito) */}
+        {/* Section 2: Catálogo Completo (com bloqueio e-Mola / M-Pesa de 1000 MT se não subscrito) */}
         <MenuSection
           items={items}
           cart={cart}
@@ -335,22 +361,32 @@ export default function App() {
           onOpenVideo={handleOpenVideo}
           onOpenSubscription={() => setIsSubscriptionModalOpen(true)}
           onUploadItemPhoto={handleUploadItemPhoto}
+          onOpenAdmin={() => handleOpenAdmin('items')}
         />
 
-        {/* Section 3: Galeria VIP de Fotos & Vídeos MP4 (Diretamente no Site) */}
+        {/* Section 3: Galeria VIP de Fotos & Vídeos MP4 (Restrita a subscritos de 1000 MT / 30 dias) */}
         <GallerySection
           galleryItems={galleryItems}
           config={config}
           menuItems={items}
+          subscription={subscription}
           onOpenVideo={handleOpenVideo}
           onAddToCart={handleAddToCart}
-          onOpenAdmin={() => setIsAdminOpen(true)}
+          onOpenAdmin={() => handleOpenAdmin('gallery')}
+          onOpenSubscription={() => setIsSubscriptionModalOpen(true)}
         />
 
-        {/* Section 4: Localização & Suítes */}
-        <LocationSection config={config} />
+        {/* Section 4: Depoimentos de Clientes Satisfeitos (Aumenta Confiança & Credibilidade) */}
+        <TestimonialsSection config={config} />
 
-        {/* Section 5: Contato & WhatsApp Oficiais */}
+        {/* Section 5: Atendimento ao Domicílio & Espaço Escolhido pelo Cliente */}
+        <LocationSection 
+          config={config}
+          onNavigateToMenu={() => handleNavigate('catalogo')}
+          onOpenCart={() => setIsCartOpen(true)}
+        />
+
+        {/* Section 6: Contato & WhatsApp Oficiais */}
         <ContactSection config={config} />
       </main>
 
@@ -358,7 +394,7 @@ export default function App() {
       <Footer
         config={config}
         onNavigate={handleNavigate}
-        onOpenAdmin={() => setIsAdminOpen(true)}
+        onOpenAdmin={() => handleOpenAdmin('items')}
       />
 
       {/* Fixed Mobile Bottom Navigation */}
@@ -387,6 +423,7 @@ export default function App() {
         config={config}
         galleryItems={galleryItems}
         subscription={subscription}
+        initialTab={adminTab}
         onSaveItems={handleSaveItems}
         onSaveConfig={handleSaveConfig}
         onSaveGalleryItems={handleSaveGalleryItems}

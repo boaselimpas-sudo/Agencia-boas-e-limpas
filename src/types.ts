@@ -37,10 +37,22 @@ export interface OrderFormData {
   customerName: string;
   customerPhone: string;
   customerAddress: string;
-  locationType: 'domicilio' | 'hotel' | 'agencia';
+  locationType: 'domicilio' | 'hotel' | 'espaco_cliente' | 'agencia';
   paymentMethod: 'm-pesa' | 'emola' | 'dinheiro';
   observations: string;
   agencyPhone: '864368486' | '878872648';
+}
+
+export interface TestimonialItem {
+  id: string;
+  name: string;
+  location: string;
+  rating: number;
+  date: string;
+  serviceType: string;
+  comment: string;
+  verified: boolean;
+  avatarInitials?: string;
 }
 
 export interface SubscriptionStatus {
@@ -64,4 +76,8 @@ export interface AgencyConfig {
   subscriptionPrice: number; // in MZN, for 1 month access to Catálogo
   emolaNumber: string; // e-Mola account number
   emolaName: string; // e-Mola account name
+  emolaQrImage?: string; // Imagem do QR Code / Recebimento e-Mola
+  mpesaNumber?: string; // Número M-Pesa oficial
+  mpesaName?: string; // Nome titular da conta M-Pesa
+  mpesaQrImage?: string; // Imagem do QR Code / Recebimento M-Pesa
 }

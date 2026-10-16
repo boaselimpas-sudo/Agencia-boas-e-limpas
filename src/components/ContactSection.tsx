@@ -46,7 +46,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ config }) => {
 
             <div className="grid grid-cols-2 gap-3">
               <a
-                href={`https://wa.me/258${config.phone1}?text=${encodeURIComponent('Olá! Gostaria de fazer uma reserva na agência Boas e limpas.')}`}
+                href={`https://wa.me/258${config.phone1.replace(/\D/g, '')}?text=${encodeURIComponent(`Olá! Gostaria de fazer uma reserva na agência ${config.name}.`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="h-12 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm transition-all shadow-md shadow-emerald-950/50"
@@ -83,7 +83,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ config }) => {
 
             <div className="grid grid-cols-2 gap-3">
               <a
-                href={`https://wa.me/258${config.phone2}?text=${encodeURIComponent('Olá! Gostaria de atendimento pela Linha 2 da Boas e limpas.')}`}
+                href={`https://wa.me/258${config.phone2.replace(/\D/g, '')}?text=${encodeURIComponent(`Olá! Gostaria de atendimento pela Linha 2 da agência ${config.name}.`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="h-12 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm transition-all shadow-md shadow-emerald-950/50"

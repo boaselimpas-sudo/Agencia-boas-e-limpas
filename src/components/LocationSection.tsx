@@ -1,85 +1,168 @@
 import React from 'react';
-import { MapPin, Navigation, Shield, Car, CheckCircle2, Building2 } from 'lucide-react';
+import { Home, ShieldCheck, Clock, Car, CheckCircle2, Hotel, MapPin, Sparkles, Send, Phone } from 'lucide-react';
 import { AgencyConfig } from '../types.ts';
 
 interface LocationSectionProps {
   config: AgencyConfig;
+  onNavigateToMenu?: () => void;
+  onOpenCart?: () => void;
 }
 
-export const LocationSection: React.FC<LocationSectionProps> = ({ config }) => {
+export const LocationSection: React.FC<LocationSectionProps> = ({ 
+  config,
+  onNavigateToMenu,
+  onOpenCart,
+}) => {
   return (
-    <section id="localizacao" className="py-14 sm:py-20 bg-zinc-950 border-t border-zinc-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="domicilio" className="py-14 sm:py-20 bg-zinc-950 border-t border-zinc-900 relative overflow-hidden">
+      {/* Background glow */}
+      <div 
+        aria-hidden="true" 
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-7xl h-96 bg-red-600/5 blur-3xl pointer-events-none"
+      />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 text-xs font-semibold text-red-500 uppercase tracking-widest mb-2">
-            <MapPin className="w-4 h-4" />
-            <span>Localização Nobre & Discreta</span>
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <div className="inline-flex items-center gap-2 text-xs font-semibold text-red-500 uppercase tracking-widest mb-2.5 px-3 py-1 bg-red-950/40 rounded-full border border-red-900/50">
+            <Home className="w-3.5 h-3.5 text-red-500" />
+            <span>Sem Ponto Físico Público · 100% Sigiloso</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold text-white font-serif tracking-tight">
-            Nossa Localização & Cobertura
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white font-serif tracking-tight">
+            Atendimento ao Domicílio & Espaço Escolhido
           </h2>
-          <p className="text-sm text-zinc-400 mt-2">
-            Localização privilegiada em área nobre de Maputo com suítes exclusivas, além de atendimento VIP em domicílio ou nos melhores hotéis da cidade.
+          <p className="text-sm sm:text-base text-zinc-400 mt-3 leading-relaxed">
+            Não realizamos atendimentos presenciais em agência para preservar o seu anonimato. Atendemos com exclusividade <strong className="text-zinc-200">no seu domicílio, na sua suíte de hotel ou no espaço privativo escolhido por você</strong> em Maputo e Matola.
           </p>
         </div>
 
-        {/* Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        {/* 3 Main Modality Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           
-          {/* Main Info Card */}
-          <div className="lg:col-span-7 bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 flex flex-col justify-between">
-            <div className="space-y-6">
-              
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-red-950/60 border border-red-800/80 flex items-center justify-center shrink-0">
-                  <Building2 className="w-6 h-6 text-red-500" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white">Sede & Suítes Privativas</h3>
-                  <p className="text-sm text-zinc-300 font-medium mt-0.5">{config.address}</p>
-                  <p className="text-xs text-zinc-500 mt-0.5">{config.city}</p>
-                </div>
+          {/* Card 1: Domicílio */}
+          <div className="bg-zinc-900/90 border border-zinc-800 hover:border-red-900/60 rounded-2xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:shadow-red-950/20">
+            <div>
+              <div className="w-12 h-12 rounded-xl bg-red-950/70 border border-red-800/80 flex items-center justify-center mb-5 text-red-400">
+                <Home className="w-6 h-6" />
               </div>
+              <h3 className="text-xl font-bold text-white mb-2">No Seu Domicílio</h3>
+              <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed mb-4">
+                Relaxe no conforto absoluto da sua residência ou apartamento. A acompanhante desloca-se até o seu endereço com pontualidade e discrição exemplar.
+              </p>
+            </div>
 
-              {/* Perks list */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-zinc-800/80">
-                <div className="flex items-start gap-3">
-                  <Shield className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="text-xs font-bold text-white uppercase tracking-wider">Entrada Reservada</h4>
-                    <p className="text-xs text-zinc-400 mt-0.5">Acesso totalmente sigiloso e sem exposição pública.</p>
-                  </div>
-                </div>
+            <ul className="space-y-2 pt-4 border-t border-zinc-800 text-xs text-zinc-300">
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Zero exposição em condomínios</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Viaturas particulares sem adesivos</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Chegada combinada via WhatsApp</span>
+              </li>
+            </ul>
+          </div>
 
-                <div className="flex items-start gap-3">
-                  <Car className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="text-xs font-bold text-white uppercase tracking-wider">Estacionamento Privativo</h4>
-                    <p className="text-xs text-zinc-400 mt-0.5">Vagas internas cobertas com monitoramento discreto.</p>
-                  </div>
-                </div>
+          {/* Card 2: Hotel & Suítes */}
+          <div className="bg-zinc-900/90 border border-zinc-800 hover:border-red-900/60 rounded-2xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:shadow-red-950/20">
+            <div>
+              <div className="w-12 h-12 rounded-xl bg-red-950/70 border border-red-800/80 flex items-center justify-center mb-5 text-red-400">
+                <Hotel className="w-6 h-6" />
               </div>
+              <h3 className="text-xl font-bold text-white mb-2">Suítes de Hotéis & Resorts</h3>
+              <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed mb-4">
+                Ideal para hóspedes, turistas e viajantes de negócios nos melhores hotéis de Maputo e Matola (Polana Hotel, Radisson Blu, Hotel Avenida, Glória, etc.).
+              </p>
+            </div>
 
-              {/* Covered Areas */}
-              <div className="pt-4 border-t border-zinc-800/80">
-                <h4 className="text-xs font-bold text-zinc-300 uppercase tracking-wider mb-3">
-                  Bairros e Regiões com Atendimento Domiciliar / Hotel:
-                </h4>
+            <ul className="space-y-2 pt-4 border-t border-zinc-800 text-xs text-zinc-300">
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Entrada discreta pela recepção</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Atendimento direto na sua suíte</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Perfeito para noites corporativas</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* Card 3: Espaço Escolhido pelo Cliente */}
+          <div className="bg-zinc-900/90 border border-zinc-800 hover:border-red-900/60 rounded-2xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:shadow-red-950/20">
+            <div>
+              <div className="w-12 h-12 rounded-xl bg-red-950/70 border border-red-800/80 flex items-center justify-center mb-5 text-red-400">
+                <Sparkles className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Espaço Escolhido por Si</h3>
+              <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed mb-4">
+                Flats executivos, apartamentos alugados por temporada, casas de praia ou o refúgio seguro de sua preferência. Você define o local e o horário.
+              </p>
+            </div>
+
+            <ul className="space-y-2 pt-4 border-t border-zinc-800 text-xs text-zinc-300">
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Flexibilidade total de ponto de encontro</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Horários agendados sob medida</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Sigilo e privacidade 100% blindados</span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+        {/* Detailed Coverage Banner */}
+        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <div className="lg:col-span-7 space-y-4">
+              <div className="flex items-center gap-2 text-xs font-bold text-red-400 uppercase tracking-wider">
+                <Car className="w-4 h-4 text-red-500" />
+                <span>Cobertura Rápida em Maputo, Matola & Arredores</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-white">
+                Onde você estiver, nós chegamos até você
+              </h3>
+              <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                Nossas acompanhantes contam com transporte particular seguro e motorista exclusivo descaracterizado. Tempo estimado de deslocamento entre <strong className="text-zinc-200">20 a 40 minutos</strong> após a confirmação do seu pedido.
+              </p>
+
+              {/* Covered Neighborhoods Badges */}
+              <div className="pt-2">
+                <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider block mb-2">
+                  Bairros e Regiões com Deslocamento Imediato:
+                </span>
                 <div className="flex flex-wrap gap-2">
                   {[
                     'Polana Cimento',
-                    'Sommerschield',
+                    'Sommerschield I e II',
                     'Costa do Sol',
-                    'Triunfo',
+                    'Bairro do Triunfo',
                     'Baixa de Maputo',
                     'Malhangalene',
-                    'Matola e Arredores',
+                    'Coop & Alto Maé',
+                    'Cidade da Matola',
+                    'Matola Rio',
+                    'Tchumene & Beluluane',
                   ].map((area) => (
                     <span
                       key={area}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-xs text-zinc-300"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-xs text-zinc-300 font-medium"
                     >
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                       {area}
@@ -87,73 +170,68 @@ export const LocationSection: React.FC<LocationSectionProps> = ({ config }) => {
                   ))}
                 </div>
               </div>
-
             </div>
 
-            {/* Navigation Button */}
-            <div className="mt-8 pt-6 border-t border-zinc-800 flex flex-col sm:flex-row gap-3">
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                  'Polana Cimento, Maputo, Mozambique'
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 h-12 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-sm transition-colors shadow-md shadow-red-950"
-              >
-                <Navigation className="w-4 h-4" />
-                <span>Ver Rota no Google Maps</span>
-              </a>
-              <a
-                href={`https://wa.me/258${config.phone1}?text=${encodeURIComponent(
-                  'Olá! Gostaria de receber a localização exata das suítes da agência Boas e limpas.'
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="h-12 px-5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-semibold rounded-xl flex items-center justify-center gap-2 text-sm transition-colors"
-              >
-                <span>Solicitar Ponto por WhatsApp</span>
-              </a>
-            </div>
-          </div>
-
-          {/* Map Preview Graphic */}
-          <div className="lg:col-span-5 bg-zinc-900 border border-zinc-800 rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden">
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-bold text-red-400 uppercase tracking-wider">
-                  Guia de Privacidade
+            {/* Quick Summary Box */}
+            <div className="lg:col-span-5 bg-zinc-950 border border-zinc-800/90 rounded-2xl p-6 space-y-5">
+              <div className="flex items-center justify-between pb-4 border-b border-zinc-800">
+                <span className="text-xs font-bold text-zinc-300 uppercase tracking-wider">
+                  Protocolo de Atendimento
                 </span>
-                <span className="text-xs text-emerald-400 font-medium">Disponibilidade Imediata</span>
+                <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5" />
+                  Ativo 24h
+                </span>
               </div>
-              <h3 className="text-lg font-bold text-white mb-2">
-                Atendimento em Qualquer Ponto da Cidade
-              </h3>
-              <p className="text-xs text-zinc-400 leading-relaxed mb-6">
-                Nossas acompanhantes deslocam-se de forma rápida e discreta em viatura própria ou motorista particular até a sua localização.
-              </p>
-            </div>
 
-            {/* Visual stylised Map Frame */}
-            <div className="h-56 w-full rounded-xl bg-zinc-950 border border-zinc-800 relative flex items-center justify-center overflow-hidden">
-              {/* Grid lines */}
-              <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#dc2626_1px,transparent_1px)] [background-size:16px_16px]" />
-              
-              <div className="relative text-center p-4">
-                <div className="w-12 h-12 bg-red-600 text-white rounded-full flex items-center justify-center mx-auto mb-2 shadow-lg shadow-red-600/50 animate-bounce">
-                  <MapPin className="w-6 h-6" />
+              <div className="space-y-3 text-xs">
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-red-950 border border-red-800 text-red-400 flex items-center justify-center font-bold text-[11px] shrink-0">
+                    1
+                  </div>
+                  <div>
+                    <strong className="text-white block">Assine a Subscrição (1000 MT / 30 dias)</strong>
+                    <span className="text-zinc-400">Acesse fotos e vídeos em alta resolução sem restrições.</span>
+                  </div>
                 </div>
-                <p className="text-sm font-bold text-white">Maputo & Matola</p>
-                <p className="text-xs text-zinc-400 mt-0.5">Tempo estimado de chegada: 20 a 40 min</p>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-red-950 border border-red-800 text-red-400 flex items-center justify-center font-bold text-[11px] shrink-0">
+                    2
+                  </div>
+                  <div>
+                    <strong className="text-white block">Escolha a Garota & Indique o Seu Espaço</strong>
+                    <span className="text-zinc-400">Informe seu domicílio, condomínio, hotel ou local desejado.</span>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-red-950 border border-red-800 text-red-400 flex items-center justify-center font-bold text-[11px] shrink-0">
+                    3
+                  </div>
+                  <div>
+                    <strong className="text-white block">Deslocamento Rápido & Sigilo Total</strong>
+                    <span className="text-zinc-400">Chegada discreta no horário agendado com segurança garantida.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-zinc-800/80 flex flex-col gap-2">
+                <a
+                  href={`https://wa.me/258${config.phone1}?text=${encodeURIComponent(
+                    'Olá! Gostaria de agendar um atendimento exclusivo ao domicílio / no meu espaço.'
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full h-11 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-md shadow-red-950 cursor-pointer"
+                >
+                  <Send className="w-4 h-4" />
+                  <span>Agendar Atendimento ao Domicílio</span>
+                </a>
               </div>
             </div>
 
-            <div className="mt-4 pt-4 border-t border-zinc-800 text-center">
-              <span className="text-xs text-zinc-400">
-                Central de Atendimento 24h: <strong className="text-white font-mono">{config.phone1}</strong>
-              </span>
-            </div>
           </div>
-
         </div>
 
       </div>

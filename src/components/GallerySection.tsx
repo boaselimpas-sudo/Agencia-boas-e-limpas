@@ -1,27 +1,40 @@
 import React, { useState, useMemo } from 'react';
-import { Play, Sparkles, Video, Image as ImageIcon, Plus, ExternalLink, X, Send, ShoppingBag } from 'lucide-react';
-import { GalleryMediaItem, AgencyConfig, MenuItem } from '../types.ts';
+import { 
+  Play, Sparkles, Video, Image as ImageIcon, Plus, ExternalLink, X, Send, 
+  ShoppingBag, Lock, ShieldCheck, CheckCircle2 
+} from 'lucide-react';
+import { GalleryMediaItem, AgencyConfig, MenuItem, SubscriptionStatus } from '../types.ts';
 
 interface GallerySectionProps {
   galleryItems: GalleryMediaItem[];
   config: AgencyConfig;
   menuItems: MenuItem[];
+  subscription: SubscriptionStatus;
   onOpenVideo: (modelIdOrItem: string) => void;
   onAddToCart: (item: MenuItem) => void;
   onOpenAdmin: () => void;
+  onOpenSubscription: () => void;
 }
 
 export const GallerySection: React.FC<GallerySectionProps> = ({
   galleryItems,
   config,
   menuItems,
+  subscription,
   onOpenVideo,
   onAddToCart,
   onOpenAdmin,
+  onOpenSubscription,
 }) => {
   const [filterType, setFilterType] = useState<'all' | 'video' | 'image'>('all');
   const [selectedModel, setSelectedModel] = useState<string>('all');
   const [lightboxItem, setLightboxItem] = useState<GalleryMediaItem | null>(null);
+
+  const isLocked = !subscription.isSubscribed;
+  const currentPrice = config.subscriptionPrice || 1000;
+  const daysRemaining = subscription.expiresAt
+    ? Math.max(0, Math.ceil((subscription.expiresAt - Date.now()) / (1000 * 60 * 60 * 24)))
+    : 0;
 
   // Unique model names
   const modelNames = useMemo(() => {
@@ -39,6 +52,10 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
   }, [galleryItems, filterType, selectedModel]);
 
   const handleBookingClick = (item: GalleryMediaItem) => {
+    if (isLocked) {
+      onOpenSubscription();
+      return;
+    }
     // Check if matching menu item exists
     const match = menuItems.find((m) => m.name.toLowerCase() === item.modelName.toLowerCase());
     if (match) {
@@ -48,6 +65,18 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
         `Olá! Vi a mídia de *${item.modelName}* na Galeria do site Boas e limpas e gostaria de agendar um atendimento.`
       );
       window.open(`https://wa.me/258${config.phone1}?text=${waText}`, '_blank');
+    }
+  };
+
+  const handleMediaClick = (item: GalleryMediaItem) => {
+    if (isLocked) {
+      onOpenSubscription();
+      return;
+    }
+    if (item.type === 'video') {
+      onOpenVideo(item.modelId || item.id);
+    } else {
+      setLightboxItem(item);
     }
   };
 
@@ -61,24 +90,75 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
             <div className="inline-flex items-center gap-2 text-xs font-semibold text-red-500 uppercase tracking-widest mb-1.5">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Galeria Oficial Direta no Site</span>
+              {subscription.isSubscribed && (
+                <span className="px-2 py-0.5 bg-emerald-950 text-emerald-400 border border-emerald-800 rounded-md text-[10px] font-bold">
+                  Acesso Liberado ({daysRemaining} dias)
+                </span>
+              )}
             </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-white font-serif tracking-tight">
               Galeria VIP de Fotos & Vídeos MP4
             </h2>
             <p className="text-sm text-zinc-400 mt-1 max-w-xl">
-              Assista aos vídeos exclusivos das garotas gravados em estúdio e ensaios fotográficos de alta resolução. Mídias reais geradas diretamente para o site.
+              {isLocked
+                ? `Fotos de ensaio e vídeos exclusivos MP4 em estúdio restritos. Subscrição mensal de ${currentPrice} MT válida por 30 dias por cliente.`
+                : 'Assista aos vídeos exclusivos das garotas gravados em estúdio e ensaios fotográficos de alta resolução desbloqueados.'}
             </p>
           </div>
 
-          {/* Quick upload / manage shortcut */}
-          <button
-            onClick={onOpenAdmin}
-            className="self-start md:self-auto px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-red-600/50 text-white text-xs font-bold rounded-xl flex items-center gap-2 transition-all cursor-pointer shadow-md"
-          >
-            <Plus className="w-4 h-4 text-red-500" />
-            <span>Subir Fotos & Vídeos MP4</span>
-          </button>
+          <div className="flex flex-wrap items-center gap-3">
+            {isLocked ? (
+              <button
+                onClick={onOpenSubscription}
+                className="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl flex items-center gap-2 transition-all cursor-pointer shadow-lg shadow-red-950"
+              >
+                <Lock className="w-3.5 h-3.5" />
+                <span>Desbloquear por {currentPrice} MT (30 Dias)</span>
+              </button>
+            ) : null}
+
+            {/* Admin shortcut */}
+            <button
+              onClick={onOpenAdmin}
+              className="px-3.5 py-2.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-red-600/50 text-zinc-300 hover:text-white text-xs font-bold rounded-xl flex items-center gap-2 transition-all cursor-pointer shadow-sm"
+              title="Gerenciar Mídias e Fotos"
+            >
+              <Plus className="w-4 h-4 text-red-500" />
+              <span className="hidden sm:inline">Subir Fotos & Vídeos</span>
+            </button>
+          </div>
         </div>
+
+        {/* LOCKED BANNER OVERLAY IN GALLERY IF NOT SUBSCRIBED */}
+        {isLocked && (
+          <div className="mb-10 p-6 bg-gradient-to-r from-red-950/70 via-zinc-900 to-zinc-950 border border-red-800/70 rounded-3xl shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-4 text-center md:text-left">
+              <div className="w-14 h-14 rounded-2xl bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-500 shrink-0">
+                <Lock className="w-7 h-7" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 justify-center md:justify-start">
+                  <span className="text-xs font-bold uppercase tracking-wider text-red-400">Conteúdo Exclusivo</span>
+                  <span className="text-xs text-zinc-400">· Subscrição Mensal (30 Dias)</span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-white font-serif mt-0.5">
+                  Fotos e Vídeos Restritos a Assinantes VIP
+                </h3>
+                <p className="text-xs text-zinc-300 mt-1 max-w-xl">
+                  Somente clientes com a subscrição ativa de <strong>{currentPrice} MT</strong> via e-Mola ou M-Pesa podem visualizar e reproduzir fotos e vídeos completos pelo período de 30 dias.
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={onOpenSubscription}
+              className="w-full md:w-auto px-7 py-4 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-extrabold rounded-2xl shadow-xl shadow-red-950 flex items-center justify-center gap-2.5 text-sm transition-all hover:scale-[1.02] cursor-pointer shrink-0"
+            >
+              <Lock className="w-4 h-4" />
+              <span>Subscrever ({currentPrice} MT) & Liberar Galeria</span>
+            </button>
+          </div>
+        )}
 
         {/* Filter Controls Bar */}
         <div className="space-y-3 mb-8">
@@ -138,7 +218,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
         </div>
 
         {/* Gallery Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 ${isLocked ? 'select-none' : ''}`}>
           {filtered.map((item) => {
             const isVideo = item.type === 'video';
 
@@ -149,23 +229,19 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
               >
                 {/* Media frame */}
                 <div
-                  onClick={() => {
-                    if (isVideo) {
-                      onOpenVideo(item.modelId || item.id);
-                    } else {
-                      setLightboxItem(item);
-                    }
-                  }}
+                  onClick={() => handleMediaClick(item)}
                   className="relative aspect-[3/4] bg-zinc-950 overflow-hidden cursor-pointer"
                 >
                   {item.thumbnailUrl || (item.type === 'image' && item.url) ? (
                     <img
                       src={item.thumbnailUrl || item.url}
                       alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${
+                        isLocked ? 'blur-md opacity-40' : ''
+                      }`}
                     />
                   ) : (
-                    <div className="w-full h-full bg-zinc-950 flex flex-col items-center justify-center text-center p-4">
+                    <div className={`w-full h-full bg-zinc-950 flex flex-col items-center justify-center text-center p-4 ${isLocked ? 'blur-sm opacity-40' : ''}`}>
                       <div className="w-16 h-16 rounded-full bg-red-950/60 border border-red-800/60 flex items-center justify-center text-red-500 font-serif font-black text-2xl mb-2">
                         {item.modelName[0]}
                       </div>
@@ -175,7 +251,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/25 to-transparent pointer-events-none" />
 
                   {/* Top Badges */}
-                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-20">
                     <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-black/70 backdrop-blur-md text-white border border-zinc-700">
                       {isVideo ? 'Vídeo MP4' : 'Foto HD'}
                     </span>
@@ -186,17 +262,43 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
                     )}
                   </div>
 
-                  {/* Center Play Icon for Video */}
-                  {isVideo && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-14 h-14 rounded-full bg-red-600/90 group-hover:bg-red-600 group-hover:scale-110 text-white flex items-center justify-center shadow-xl shadow-red-950 transition-all">
-                        <Play className="w-7 h-7 fill-white ml-0.5" />
+                  {/* Locked Overlay if client not subscribed */}
+                  {isLocked ? (
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-[3px] flex flex-col items-center justify-center p-4 text-center z-10">
+                      <div className="w-12 h-12 rounded-full bg-red-600/30 border border-red-500/60 flex items-center justify-center text-red-400 mb-2 shadow-lg">
+                        <Lock className="w-6 h-6" />
                       </div>
+                      <span className="text-xs font-bold text-white uppercase tracking-wider">
+                        Mídia Restrita
+                      </span>
+                      <p className="text-[11px] text-zinc-300 mt-1 max-w-[180px]">
+                        Requer subscrição de {currentPrice} MT (30 dias)
+                      </p>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onOpenSubscription();
+                        }}
+                        className="mt-3 px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg shadow-md cursor-pointer"
+                      >
+                        Subscrever
+                      </button>
                     </div>
+                  ) : (
+                    <>
+                      {/* Center Play Icon for Video */}
+                      {isVideo && (
+                        <div className="absolute inset-0 flex items-center justify-center z-20">
+                          <div className="w-14 h-14 rounded-full bg-red-600/90 group-hover:bg-red-600 group-hover:scale-110 text-white flex items-center justify-center shadow-xl shadow-red-950 transition-all">
+                            <Play className="w-7 h-7 fill-white ml-0.5" />
+                          </div>
+                        </div>
+                      )}
+                    </>
                   )}
 
                   {/* Bottom details on image */}
-                  <div className="absolute bottom-3 left-3 right-3 flex items-baseline justify-between text-white">
+                  <div className="absolute bottom-3 left-3 right-3 flex items-baseline justify-between text-white z-20">
                     <div>
                       <span className="text-sm font-bold block">{item.modelName}</span>
                       <span className="text-[11px] text-zinc-300 font-normal line-clamp-1">{item.title}</span>
@@ -211,7 +313,15 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
 
                 {/* Card Action footer */}
                 <div className="p-3 bg-zinc-900 border-t border-zinc-800/80 flex items-center justify-between gap-2">
-                  {isVideo ? (
+                  {isLocked ? (
+                    <button
+                      onClick={onOpenSubscription}
+                      className="flex-1 h-9 bg-zinc-800 hover:bg-zinc-700 text-red-400 font-bold rounded-lg text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer border border-red-900/40"
+                    >
+                      <Lock className="w-3.5 h-3.5" />
+                      <span>Desbloquear ({currentPrice} MT)</span>
+                    </button>
+                  ) : isVideo ? (
                     <button
                       onClick={() => onOpenVideo(item.modelId || item.id)}
                       className="flex-1 h-9 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
@@ -245,8 +355,8 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
 
       </div>
 
-      {/* Photo Lightbox Modal */}
-      {lightboxItem && (
+      {/* Photo Lightbox Modal (Only for subscribed clients) */}
+      {lightboxItem && !isLocked && (
         <div
           onClick={() => setLightboxItem(null)}
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-in fade-in duration-200"

@@ -80,10 +80,10 @@ export const CartModal: React.FC<CartModalProps> = ({
 
     const locationLabel =
       formData.locationType === 'domicilio'
-        ? 'Residência / Domicílio'
+        ? 'Ao Domicílio / Residência'
         : formData.locationType === 'hotel'
-        ? 'Hotel / Hospedagem'
-        : 'Na Agência Boas e Limpas';
+        ? 'Suíte de Hotel / Hospedagem'
+        : 'Espaço Escolhido pelo Cliente';
 
     const message = `*SOLICITAÇÃO DE PEDIDO / AGENDAMENTO*\n*Agência Boas e limpas*\n----------------------------------------\n*ITENS SELECIONADOS:*\n${itemsText}\n\n*VALOR TOTAL:* ${totalAmount.toLocaleString('pt-MZ')} MZN\n----------------------------------------\n*DADOS DO CLIENTE:*\n👤 *Nome:* ${formData.customerName.trim()}\n📱 *Telefone:* ${formData.customerPhone.trim()}\n📍 *Local:* ${locationLabel}\n🏠 *Endereço/Detalhes:* ${formData.customerAddress.trim()}\n💳 *Forma de Pagamento:* ${paymentLabel}\n📝 *Observações:* ${formData.observations.trim() || 'Nenhuma'}\n----------------------------------------\n_Pedido gerado via Cardápio Digital Boas e limpas_`;
 
@@ -345,9 +345,9 @@ export const CartModal: React.FC<CartModalProps> = ({
                 </label>
                 <div className="grid grid-cols-3 gap-2 mb-2">
                   {[
-                    { id: 'domicilio', label: 'Domicílio' },
+                    { id: 'domicilio', label: 'Ao Domicílio' },
                     { id: 'hotel', label: 'Hotel' },
-                    { id: 'agencia', label: 'Na Agência' },
+                    { id: 'espaco_cliente', label: 'Espaço do Cliente' },
                   ].map((loc) => (
                     <button
                       key={loc.id}
@@ -403,6 +403,53 @@ export const CartModal: React.FC<CartModalProps> = ({
                     </button>
                   ))}
                 </div>
+
+                {/* Payment Receiving Info / QR Code Box */}
+                {formData.paymentMethod === 'emola' && (
+                  <div className="mt-3 p-3.5 bg-zinc-900 border border-amber-900/40 rounded-xl space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                        <span className="text-xs font-bold text-white uppercase">Dados de Recebimento e-Mola</span>
+                      </div>
+                      <span className="text-xs font-mono font-bold text-amber-400">{config.emolaNumber}</span>
+                    </div>
+                    <p className="text-[11px] text-zinc-400">Titular da Conta: <strong className="text-zinc-200">{config.emolaName}</strong></p>
+                    {config.emolaQrImage && (
+                      <div className="pt-2 border-t border-zinc-800 flex flex-col items-center justify-center p-2 bg-zinc-950/80 rounded-lg">
+                        <span className="text-[10px] text-zinc-300 font-bold mb-1.5">QR Code Oficial de Recebimento</span>
+                        <img
+                          src={config.emolaQrImage}
+                          alt="QR Code e-Mola"
+                          className="w-28 h-28 object-contain rounded-lg border border-zinc-700 bg-white p-1"
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {formData.paymentMethod === 'm-pesa' && (
+                  <div className="mt-3 p-3.5 bg-zinc-900 border border-red-900/40 rounded-xl space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-red-600"></span>
+                        <span className="text-xs font-bold text-white uppercase">Dados de Recebimento M-Pesa</span>
+                      </div>
+                      <span className="text-xs font-mono font-bold text-red-400">{config.mpesaNumber || config.phone1}</span>
+                    </div>
+                    <p className="text-[11px] text-zinc-400">Titular da Conta: <strong className="text-zinc-200">{config.mpesaName || config.name}</strong></p>
+                    {config.mpesaQrImage && (
+                      <div className="pt-2 border-t border-zinc-800 flex flex-col items-center justify-center p-2 bg-zinc-950/80 rounded-lg">
+                        <span className="text-[10px] text-zinc-300 font-bold mb-1.5">QR Code Oficial de Recebimento</span>
+                        <img
+                          src={config.mpesaQrImage}
+                          alt="QR Code M-Pesa"
+                          className="w-28 h-28 object-contain rounded-lg border border-zinc-700 bg-white p-1"
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Observations */}

@@ -1,11 +1,12 @@
 import React from 'react';
-import { ShoppingBag, Settings, Phone, Video, Lock, CheckCircle2 } from 'lucide-react';
+import { ShoppingBag, Settings, Phone, Video, Lock, CheckCircle2, Star, Home } from 'lucide-react';
 import { AgencyConfig } from '../types.ts';
 
 interface HeaderProps {
   config: AgencyConfig;
   cartCount: number;
   isSubscribed: boolean;
+  daysRemaining?: number;
   onOpenCart: () => void;
   onOpenAdmin: () => void;
   onOpenSubscription: () => void;
@@ -17,6 +18,7 @@ export const Header: React.FC<HeaderProps> = ({
   config,
   cartCount,
   isSubscribed,
+  daysRemaining,
   onOpenCart,
   onOpenAdmin,
   onOpenSubscription,
@@ -68,12 +70,21 @@ export const Header: React.FC<HeaderProps> = ({
               <span>Galeria VIP</span>
             </button>
             <button
-              onClick={() => onNavigate('localizacao')}
-              className={`hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
-                activeSection === 'localizacao' ? 'text-red-500 font-semibold' : ''
+              onClick={() => onNavigate('depoimentos')}
+              className={`hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer flex items-center gap-1.5 ${
+                activeSection === 'depoimentos' ? 'text-red-500 font-semibold' : ''
               }`}
             >
-              Localização
+              <Star className="w-3.5 h-3.5 text-amber-400" />
+              <span>Depoimentos</span>
+            </button>
+            <button
+              onClick={() => onNavigate('domicilio')}
+              className={`hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+                activeSection === 'domicilio' ? 'text-red-500 font-semibold' : ''
+              }`}
+            >
+              Ao Domicílio
             </button>
             <button
               onClick={() => onNavigate('contato')}
@@ -87,7 +98,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Zone 3: Primary Action & Tools */}
           <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
-            {/* e-Mola Subscription Button */}
+            {/* VIP Subscription Button */}
             <button
               onClick={onOpenSubscription}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer border ${
@@ -95,10 +106,10 @@ export const Header: React.FC<HeaderProps> = ({
                   ? 'bg-emerald-950/60 text-emerald-400 border-emerald-800'
                   : 'bg-red-950/60 text-red-300 hover:text-white hover:bg-red-900 border-red-700/80 animate-pulse'
               }`}
-              title="Subscrição Mensal via e-Mola"
+              title="Subscrição Mensal VIP (1000 MT / 30 dias)"
             >
               {isSubscribed ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5 text-red-400" />}
-              <span>{isSubscribed ? 'Subscrição Ativa' : 'Subscrição e-Mola'}</span>
+              <span>{isSubscribed ? `VIP Ativo (${daysRemaining ?? 30}d)` : 'Subscrição VIP (1000 MT)'}</span>
             </button>
 
             {/* Quick WhatsApp button */}
@@ -115,11 +126,12 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Admin toggle */}
             <button
               onClick={onOpenAdmin}
-              className="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-lg transition-colors cursor-pointer"
-              title="Gerenciar Catálogo, Fotos & Vídeos"
-              aria-label="Gerenciar Catálogo"
+              className="px-2.5 py-1.5 text-xs font-semibold text-zinc-300 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-red-600/60 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+              title="Gerenciar Cardápio & Mídias da Agência"
+              aria-label="Gerenciar Cardápio & Mídias"
             >
-              <Settings className="w-5 h-5" />
+              <Settings className="w-4 h-4 text-red-500" />
+              <span className="hidden sm:inline">Gerenciar</span>
             </button>
 
             {/* Cart Button */}
