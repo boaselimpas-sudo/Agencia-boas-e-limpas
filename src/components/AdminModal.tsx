@@ -1,4 +1,60 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
+import { X } from 'lucide-react';
+
+const AdminModal = ({ isOpen, onClose }: any) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordInput === 'Boas1014') {
+      setIsAuthenticated(true);
+      setPasswordInput('');
+      setPasswordError('');
+    } else {
+      setPasswordError('Senha incorreta!');
+    }
+  };
+
+  if (!isOpen) return null;
+
+  if (!isAuthenticated) {
+    return (
+      <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl p-8 w-full max-w-sm">
+          <h2 className="text-xl font-bold mb-6 text-center">Área do Proprietário</h2>
+          <form onSubmit={handlePasswordSubmit}>
+            <input
+              type="password"
+              value={passwordInput}
+              onChange={(e) => setPasswordInput(e.target.value)}
+              placeholder="Digite Boas1014"
+              className="w-full border-2 border-pink-200 rounded-xl px-4 py-3 mb-2"
+              autoFocus
+            />
+            {passwordError && <p className="text-red-500 text-sm mb-3">{passwordError}</p>}
+            <button type="submit" className="w-full bg-pink-600 text-white py-3 rounded-xl font-bold">
+              Entrar
+            </button>
+          </form>
+          <button onClick={onClose} className="w-full mt-3 text-gray-500">Fechar</button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl p-6">
+        <h2 className="font-bold">Entrou! Senha funcionando!</h2>
+        <button onClick={onClose} className="mt-4 bg-black text-white px-4 py-2 rounded">Fechar</button>
+      </div>
+    </div>
+  );
+};
+
+export default AdminModal;
 import { X, Plus, Edit2, Trash2, RotateCcw, Save, ShieldAlert, Check, AlertTriangle, Upload, Video, Image as ImageIcon, Play, Sparkles, Lock, CreditCard } from 'lucide-react';
 import { MenuItem, AgencyConfig, GalleryMediaItem, SubscriptionStatus } from '../types.ts';
 import { PRESET_VIDEOS } from '../data/initialData.ts';
