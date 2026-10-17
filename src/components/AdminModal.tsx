@@ -39,14 +39,14 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   onResetDefaults,
 }) => {
   // Admin Passcode Protection (boas7715)
-  const ADMIN_PASSCODE = 'boas7715';
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    try {
-      return sessionStorage.getItem('boas_admin_auth') === 'true';
-    } catch {
-      return false;
-    }
-  });
+  const ADMIN_PASSCODE = 'boas1014';
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+  try {
+    return sessionStorage.getItem('boas_admin_auth') === 'true';
+  } catch {
+    return false;
+  }
+});
   const [passcode, setPasscode] = useState<string>('');
   const [passcodeError, setPasscodeError] = useState<string | null>(null);
   const [showPasscode, setShowPasscode] = useState<boolean>(false);
