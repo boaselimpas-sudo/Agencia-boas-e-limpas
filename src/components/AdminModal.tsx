@@ -628,56 +628,35 @@ const [isAuthenticated, setIsAuthenticated] = useState(() => {
               </p>
             </div>
 
-            <form onSubmit={handleAuthenticate} className="w-full space-y-4">
-              <div className="relative">
-                <Key className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
-                  type={showPasscode ? 'text' : 'password'}
-                  autoFocus
-                  required
-                  value={passcode}
-                  onChange={(e) => {
-                    setPasscode(e.target.value);
-                    setPasscodeError(null);
-                  }}
-                  placeholder="Digite a senha"
-                  className="w-full pl-10 pr-12 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-center text-sm text-white font-mono tracking-wider focus:outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600 transition-all placeholder:text-zinc-600"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPasscode(!showPasscode)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 cursor-pointer"
-                  title={showPasscode ? 'Ocultar senha' : 'Ver senha'}
-                >
-                  {showPasscode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
+            <form onSubmit={handlePasswordSubmit}>
+  <input
+    type="password"
+    value={passwordInput}
+    onChange={(e) => setPasswordInput(e.target.value)}
+    placeholder="Digite a senha"
+    className="w-full p-3 border rounded-lg mb-4 pl-10"
+    autoFocus
+    required
+  />
+  <div className="flex gap-2">
+    <button type="button" onClick={onClose} className="flex-1 py-3 bg-gray-200 rounded-lg">
+      Cancelar
+    </button>
+    <button type="submit" className="flex-1 py-3 bg-red-600 text-white rounded-lg">
+      Entrar
+    </button>
+  </div>
+</form>
+</div>
+        </div>
+);
+}
 
-              {passcodeError && (
-                <div className="p-3 bg-red-950/80 border border-red-800 rounded-xl text-red-300 text-xs flex items-center justify-center gap-2 animate-in fade-in">
-                  <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
-                  <span>{passcodeError}</span>
-                </div>
-              )}
-
-              <button
-                type="submit"
-                className="w-full py-3 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg shadow-red-950/80 transition-all cursor-pointer flex items-center justify-center gap-2"
-              >
-                <ShieldCnamk className="w-4 h-4" />
-                <span>Verificar Senha & Abrir Painel</span>
-              </button>
-
-              
-              </div>
-            </form>
-          </div>
-        ) : (
-          <>
-            {/* Tab Navigation */}
-            <div className="flex items-center gap-2 sm:gap-4 px-5 sm:px-6 pt-3 border-b border-zinc-800 bg-zinc-950 overflow-x-auto scrollbar-none">
-              <button
-                onClick={() => { setActiveTab('items'); setEditingItem(null); setIsCreating(false); }}
+return (
+  <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+    <div className="bg-white rounded-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="flex border-b">
+        <button
                 className={`pb-3 text-xs sm:text-sm font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap shrink-0 flex items-center gap-2 ${
                   activeTab === 'items'
                     ? 'border-red-600 text-white'
