@@ -648,7 +648,6 @@ const [isAuthenticated, setIsAuthenticated] = useState(() => {
   </div>
 </form>
 </div>
-        </div>
 );
 }
 
