@@ -20,33 +20,34 @@ export const INITIAL_AGENCY_CONFIG: AgencyConfig = {
 };
 
 // Preset exclusive videos for the models
+// Preset exclusive videos for the models
 export const PRESET_VIDEOS = [
   {
     id: 'video-1',
-    title: 'Apresentação Exclusiva Sheila (Reel VIP)',
+    title: 'Apresentacao Exclusiva Sheila',
     modelName: 'Sheila',
-    url: 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-in-a-black-dress-walking-on-a-runway-41221-large.mp4',
+    url: 'https://assets.mixkit.co/videos/preview/mixkit-woman-modeling-in-a-black-dress-39874-large.mp4',
     duration: '0:32',
   },
   {
     id: 'video-2',
-    title: 'Ensaio Sofisticado Vanessa (Coquetel VIP)',
+    title: 'Ensaio Sofisticado Vanessa',
     modelName: 'Vanessa',
-    url: 'https://assets.mixkit.co/videos/preview/mixkit-young-woman-smiling-at-the-camera-in-a-party-41225-large.mp4',
+    url: 'https://assets.mixkit.co/videos/preview/mixkit-beautiful-woman-modeling-39875-large.mp4',
     duration: '0:28',
   },
   {
     id: 'video-3',
-    title: 'Apresentação Noturna Yolanda (Lounge VIP)',
+    title: 'Apresentacao Noturna Yolanda',
     modelName: 'Yolanda',
-    url: 'https://assets.mixkit.co/videos/preview/mixkit-beautiful-woman-in-a-nightclub-with-neon-lights-41222-large.mp4',
+    url: 'https://assets.mixkit.co/videos/preview/mixkit-model-wearing-a-black-dress-39876-large.mp4',
     duration: '0:35',
   },
   {
     id: 'video-4',
-    title: 'Sessão Exclusiva Amanda (Studio Look)',
+    title: 'Sessao Exclusiva Amanda',
     modelName: 'Amanda',
-    url: 'https://assets.mixkit.co/videos/preview/mixkit-glamorous-model-posing-in-a-studio-setting-41223-large.mp4',
+    url: 'https://assets.mixkit.co/videos/preview/mixkit-woman-in-a-black-dress-modeling-39877-large.mp4',
     duration: '0:24',
   },
 ];
