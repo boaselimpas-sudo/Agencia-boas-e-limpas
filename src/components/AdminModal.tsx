@@ -1,2 +1,3 @@
-import { X } from 'lucide-react';
-export default function AdminModal({onClose}:any){return null;}
+export default function AdminModal() {
+  return null;
+}
