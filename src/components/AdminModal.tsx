@@ -38,7 +38,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   onToggleSubscription,
   onResetDefaults,
 }) => {
-  // Admin Passcode Protection (boas7715)
+  // Admin Passcode Protection
   const ADMIN_PASSCODE = 'boas1014';
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
   try {
@@ -640,7 +640,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                     setPasscode(e.target.value);
                     setPasscodeError(null);
                   }}
-                  placeholder="Digite a senha (boas7715)"
+                  placeholder="Digite a senha"
                   className="w-full pl-10 pr-12 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-center text-sm text-white font-mono tracking-wider focus:outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600 transition-all placeholder:text-zinc-600"
                 />
                 <button
