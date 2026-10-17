@@ -668,10 +668,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                 <span>Verificar Senha & Abrir Painel</span>
               </button>
 
-              <div className="p-2.5 bg-zinc-900/60 border border-zinc-800/80 rounded-xl text-center">
-                <span className="text-[11px] text-zinc-400">
-                  Senha oficial do administrador: <strong className="text-white font-mono">boas7715</strong>
-                </span>
+              
               </div>
             </form>
           </div>
