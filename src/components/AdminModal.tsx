@@ -609,8 +609,8 @@ const [isAuthenticated, setIsAuthenticated] = useState(() => {
           </div>
         </div>
 
-          
-  if (!isAuthenticated) { return (
+
+        
           <div className="p-6 sm:p-12 flex flex-col items-center justify-center text-center space-y-6 max-w-md mx-auto my-auto animate-in fade-in duration-200">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-red-600 to-rose-700 flex items-center justify-center text-white shadow-xl shadow-red-950/60">
               <Lock className="w-8 h-8" />
