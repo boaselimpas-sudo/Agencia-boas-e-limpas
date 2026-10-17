@@ -664,7 +664,7 @@ const [isAuthenticated, setIsAuthenticated] = useState(() => {
                 type="submit"
                 className="w-full py-3 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg shadow-red-950/80 transition-all cursor-pointer flex items-center justify-center gap-2"
               >
-                <ShieldCheck className="w-4 h-4" />
+                <ShieldCnamk className="w-4 h-4" />
                 <span>Verificar Senha & Abrir Painel</span>
               </button>
 
