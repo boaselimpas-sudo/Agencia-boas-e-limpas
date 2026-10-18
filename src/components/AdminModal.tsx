@@ -1,3 +1,4 @@
-export default function AdminModal() {
+export function AdminModal() {
   return null;
 }
+export default AdminModal;
