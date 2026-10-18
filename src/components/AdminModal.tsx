@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-export default function AdminModal({meninas,setMeninas,onClose,config,setConfig}:{meninas:any[],setMeninas:any,onClose:any,config:any,setConfig:any}){
+export function AdminModal({meninas,setMeninas,onClose,config,setConfig}:{meninas:any[],setMeninas:any,onClose:any,config:any,setConfig:any}){
 const SENHA='2024';
 const [senha,setSenha]=useState('');
 const [logado,setLogado]=useState(false);
@@ -61,3 +61,4 @@ return (
 </div>
 )
  }
+export default AdminModal;
