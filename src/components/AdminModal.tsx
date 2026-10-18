@@ -5,7 +5,7 @@ export function AdminModal(props: any) {
 
   const [autenticado, setAutenticado] = useState(false);
   const [codigo, setCodigo] = useState('');
-  const SENHA = '2025'; // SEU CÓDIGO AQUI - pode trocar!
+  const SENHA = 'Felixpro27';
 
   const [tab, setTab] = useState(props.initialTab || 'config');
   const [config, setConfigLocal] = useState(props.config || {});
@@ -16,7 +16,8 @@ export function AdminModal(props: any) {
     if (codigo === SENHA) {
       setAutenticado(true);
     } else {
-      alert('Código errado! Tenta 2025');
+      alert('Código errado!');
+      setCodigo('');
     }
   };
 
@@ -24,7 +25,7 @@ export function AdminModal(props: any) {
     if (props.onSaveConfig) props.onSaveConfig(config);
     if (props.onSaveItems) props.onSaveItems(items);
     if (props.onSaveGalleryItems) props.onSaveGalleryItems(gallery);
-    alert('Salvo com sucesso! ✅');
+    alert('Salvo! ✅');
     props.onClose();
     setAutenticado(false);
     setCodigo('');
@@ -33,14 +34,11 @@ export function AdminModal(props: any) {
   return (
     <div onClick={props.onClose} style={{position:'fixed',inset:'0',zIndex:999999,background:'rgba(0,0,0,0.92)',display:'flex',justifyContent:'center',padding:'10px',overflowY:'auto'}}>
       <div onClick={(e:any)=>e.stopPropagation()} style={{background:'#111',width:'100%',maxWidth:'600px',borderRadius:'16px',border:'1px solid #333',display:'flex',flexDirection:'column',maxHeight:'95vh'}}>
-        
-        {/* CABEÇALHO */}
         <div style={{padding:'16px',borderBottom:'1px solid #222',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
           <h3 style={{color:'white',margin:0}}>🔒 Admin VIP</h3>
           <button onClick={props.onClose} style={{background:'#ff0000',color:'white',border:'none',width:'38px',height:'38px',borderRadius:'50%',fontWeight:'bold',fontSize:'18px'}}>X</button>
         </div>
 
-        {/* TELA DE CÓDIGO */}
         {!autenticado ? (
           <div style={{padding:'30px 20px',display:'flex',flexDirection:'column',gap:'16px',alignItems:'center'}}>
             <div style={{fontSize:'48px'}}>🔐</div>
@@ -50,11 +48,10 @@ export function AdminModal(props: any) {
               value={codigo} 
               onChange={e=>setCodigo(e.target.value)}
               placeholder="Código"
-              style={{width:'100%',padding:'16px',borderRadius:'10px',background:'#222',border:'2px solid #ff0000',color:'white',fontSize:'20px',textAlign:'center',letterSpacing:'8px'}} 
+              style={{width:'100%',padding:'16px',borderRadius:'10px',background:'#222',border:'2px solid #ff0000',color:'white',fontSize:'16px',textAlign:'center'}} 
               onKeyDown={e=>e.key==='Enter' && verificarCodigo()}
             />
             <button onClick={verificarCodigo} style={{width:'100%',padding:'16px',background:'#ff0000',color:'white',border:'none',borderRadius:'10px',fontWeight:'bold',fontSize:'16px'}}>Entrar</button>
-            <p style={{color:'#666',fontSize:'12px'}}>Código padrão: 2025</p>
           </div>
         ) : (
           <>
@@ -63,7 +60,6 @@ export function AdminModal(props: any) {
               <button onClick={()=>setTab('gallery')} style={{flex:1,padding:'10px',borderRadius:'8px',border:'none',background:tab==='gallery'?'#ff0000':'#222',color:'white',fontWeight:'bold'}}>Fotos</button>
               <button onClick={()=>setTab('items')} style={{flex:1,padding:'10px',borderRadius:'8px',border:'none',background:tab==='items'?'#ff0000':'#222',color:'white',fontWeight:'bold'}}>Preços</button>
             </div>
-
             <div style={{flex:1,overflowY:'auto',padding:'16px',display:'flex',flexDirection:'column',gap:'12px'}}>
               {tab==='config' && (
                 <>
@@ -92,7 +88,6 @@ export function AdminModal(props: any) {
                 </div>
               ))}
             </div>
-
             <div style={{padding:'12px',borderTop:'1px solid #222',display:'flex',gap:'8px'}}>
               <button onClick={props.onClose} style={{flex:1,padding:'14px',background:'#222',color:'white',border:'1px solid #444',borderRadius:'10px'}}>Fechar</button>
               <button onClick={salvarTudo} style={{flex:1,padding:'14px',background:'#ff0000',color:'white',border:'none',borderRadius:'10px',fontWeight:'bold'}}>💾 Salvar</button>
