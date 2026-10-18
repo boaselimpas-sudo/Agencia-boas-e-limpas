@@ -14,7 +14,7 @@ return (
 <div style={{position:'fixed',inset:0,zIndex:999999,background:'#000',display:'flex',alignItems:'center',justifyContent:'center',padding:'20px'}}>
 <div style={{background:'#1a1a1a',border:'1px solid #333',padding:'25px',borderRadius:'12px',width:'100%',maxWidth:'360px'}}>
 <h2 style={{color:'#fff',margin:'0 0 15px 0',textAlign:'center'}}>🔒 Painel Admin</h2>
-<input type='password' placeholder='Senha: 2024' value={senha} onChange={e=>setSenha(e.target.value)} style={{width:'100%',padding:'12px',borderRadius:'8px',border:'1px solid #444',background:'#222',color:'#fff',marginBottom:'10px',boxSizing:'border-box'}}/>
+<input type='password' placeholder='Digite a senha' value={senha} onChange={e=>setSenha(e.target.value)} style={{width:'100%',padding:'12px',borderRadius:'8px',border:'1px solid #444',background:'#222',color:'#fff',marginBottom:'10px',boxSizing:'border-box'}}/>
 {erro && <div style={{color:'#ff4444',fontSize:'13px',marginBottom:'8px',textAlign:'center'}}>{erro}</div>}
 <button onClick={()=>{if(senha===SENHA){setLogado(true);setErro('')}else setErro('Senha incorreta!')}} style={{width:'100%',padding:'12px',background:'#E30613',color:'#fff',border:'none',borderRadius:'8px',fontWeight:'bold'}}>Entrar</button>
 <button onClick={onClose} style={{width:'100%',padding:'10px',background:'transparent',color:'#aaa',border:'none',marginTop:'8px'}}>Cancelar</button>
