@@ -1,92 +1,120 @@
 import { useState } from 'react';
-export function AdminModal(props:any){
-if(!props.isOpen) return null;
-const [autenticado,setAutenticado]=useState(false);
-const [codigo,setCodigo]=useState('');
-const [aba,setAba]=useState('agencia');
-const SENHA='Felixpro27';
-const verificarCodigo=()=>{if(codigo===SENHA){setAutenticado(true)}else{alert('Código errado!');setCodigo('')}};
-const salvar=()=>{if(props.onSaveConfig) props.onSaveConfig(props.config); alert('Salvo com fotos! ✅'); props.onClose();};
+import { INITIAL_MENU_ITEMS, INITIAL_AGENCY_CONFIG } from '../data/initialData';
 
-// ACHA AUTOMATICO ONDE ESTÃO AS MODELOS
-let chaveModelos = '';
-let lista:any[] = [];
-if(props.config){
-  for(let k of Object.keys(props.config)){
-    let v:any = (props.config as any)[k];
-    if(Array.isArray(v) && v.length>0 && typeof v[0]==='object'){
-      // se tem foto ou nome, é a lista de modelos
-      if(v[0].foto!==undefined || v[0].image!==undefined || v[0].img!==undefined || v[0].photo!==undefined || v[0].nome!==undefined || v[0].name!==undefined){
-        chaveModelos = k;
-        lista = v;
-        break;
-      }
-    }
-  }
-}
+export function AdminModal(props: any) {
+  if (!props.isOpen) return null;
+  const [autenticado, setAutenticado] = useState(false);
+  const [codigo, setCodigo] = useState('');
+  const [aba, setAba] = useState('fotos');
+  const SENHA = 'Felixpro27';
 
-const handleFotoUpload = (e:any, idx:number) => {
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = (ev:any) => {
-    const novo = {...props.config};
-    novo[chaveModelos][idx].foto = ev.target.result;
-    if(novo[chaveModelos][idx].image!==undefined) novo[chaveModelos][idx].image = ev.target.result;
-    if(novo[chaveModelos][idx].img!==undefined) novo[chaveModelos][idx].img = ev.target.result;
-    if(novo[chaveModelos][idx].photo!==undefined) novo[chaveModelos][idx].photo = ev.target.result;
-    if(props.setConfig) props.setConfig({...novo});
+  const verificarCodigo = () => {
+    if (codigo === SENHA) setAutenticado(true);
+    else alert('Senha errada!');
   };
-  reader.readAsDataURL(file);
-};
 
-return(
-<div onClick={props.onClose} style={{position:'fixed',inset:'0',zIndex:999999,background:'rgba(0,0,0,0.92)',display:'flex',justifyContent:'center',padding:'10px',overflowY:'auto'}}>
-<div onClick={(e:any)=>e.stopPropagation()} style={{background:'#111',width:'100%',maxWidth:'500px',borderRadius:'16px',border:'1px solid #333'}}>
-<div style={{padding:'16px',display:'flex',justifyContent:'space-between',alignItems:'center',borderBottom:'1px solid #222'}}>
-<h3 style={{color:'white',margin:0}}>🔒 Admin VIP</h3>
-<button onClick={props.onClose} style={{background:'#ff0000',color:'white',border:'none',width:'36px',height:'36px',borderRadius:'50%',fontWeight:'bold'}}>X</button>
-</div>
-{!autenticado?(
-<div style={{padding:'30px 20px',display:'flex',flexDirection:'column',gap:'16px',alignItems:'center'}}>
-<div style={{fontSize:'48px'}}>🔐</div>
-<h3 style={{color:'white',margin:0}}>Digite o Código</h3>
-<input type="password" value={codigo} onChange={e=>setCodigo(e.target.value)} placeholder="Código" style={{width:'100%',padding:'16px',borderRadius:'10px',background:'#222',border:'2px solid #ff0000',color:'white',fontSize:'18px',textAlign:'center'}} onKeyDown={e=>e.key==='Enter'&&verificarCodigo()} />
-<button onClick={verificarCodigo} style={{width:'100%',padding:'16px',background:'#ff0000',color:'white',border:'none',borderRadius:'10px',fontWeight:'bold'}}>Entrar</button>
-</div>
-):(
-<div>
-<div style={{display:'flex',gap:'8px',padding:'12px'}}>
-<button onClick={()=>setAba('agencia')} style={{flex:1,padding:'10px',borderRadius:'8px',border:'none',background:aba==='agencia'?'#ff0000':'#333',color:'white',fontWeight:'bold'}}>Agência</button>
-<button onClick={()=>setAba('fotos')} style={{flex:1,padding:'10px',borderRadius:'8px',border:'none',background:aba==='fotos'?'#ff0000':'#333',color:'white',fontWeight:'bold'}}>Fotos</button>
-<button onClick={()=>setAba('precos')} style={{flex:1,padding:'10px',borderRadius:'8px',border:'none',background:aba==='precos'?'#ff0000':'#333',color:'white',fontWeight:'bold'}}>Preços</button>
-</div>
-<div style={{padding:'16px',maxHeight:'60vh',overflowY:'auto'}}>
-{aba==='fotos' && (
-<div style={{display:'flex',flexDirection:'column',gap:'16px'}}>
-<p style={{color:'#aaa',fontSize:'12px'}}>Lista encontrada: {chaveModelos} ({lista.length} modelos)</p>
-{lista.map((m:any,i:number)=>(
-<div key={i} style={{background:'#1a1a1a',padding:'12px',borderRadius:'10px',border:'1px solid #333'}}>
-<p style={{color:'white',margin:'0 0 8px 0',fontWeight:'bold'}}>{m.nome||m.name||`Modelo ${i+1}`}</p>
-{(m.foto||m.image||m.img||m.photo) && <img src={m.foto||m.image||m.img||m.photo} style={{width:'100%',height:'150px',objectFit:'cover',borderRadius:'8px',marginBottom:'8px'}}/>}
-<label style={{display:'block',width:'100%',padding:'14px',background:'#ff0000',color:'white',textAlign:'center',borderRadius:'8px',fontWeight:'bold',cursor:'pointer'}}>
-📷 ESCOLHER FOTO DO CELULAR
-<input type="file" accept="image/*" onChange={(e)=>handleFotoUpload(e,i)} style={{display:'none'}}/>
-</label>
-</div>
-))}
-{lista.length===0 && <p style={{color:'white'}}>Nenhuma modelo encontrada! Chaves: {Object.keys(props.config||{}).join(', ')}</p>}
-</div>
-)}
-{aba!=='fotos' && <div style={{color:'white',padding:'20px'}}><p>Aba {aba} - use a aba Fotos para carregar fotos direto do celular!</p><p style={{fontSize:'12px',color:'#aaa'}}>Config keys: {Object.keys(props.config||{}).join(', ')}</p></div>}
-</div>
-<div style={{padding:'12px',display:'flex',gap:'10px',borderTop:'1px solid #222'}}>
-<button onClick={props.onClose} style={{flex:1,padding:'12px',background:'#333',color:'white',border:'none',borderRadius:'8px'}}>Fechar</button>
-<button onClick={salvar} style={{flex:1,padding:'12px',background:'#ff0000',color:'white',border:'none',borderRadius:'8px',fontWeight:'bold'}}>💾 Salvar Tudo</button>
-</div>
-</div>
-)}
-</div>
-</div>
-)}
-export default AdminModal;
+  const [configAgencia, setConfigAgencia] = useState(() => {
+    try {
+      const s = localStorage.getItem('agency_config') || localStorage.getItem('agency_config_v2');
+      return s ? JSON.parse(s) : INITIAL_AGENCY_CONFIG;
+    } catch { return INITIAL_AGENCY_CONFIG; }
+  });
+
+  const [lista, setLista] = useState(() => {
+    try {
+      const keys = ['menu_items','agency_menu_items','boas_e_limpas_menu','vip_menu_items','agency_menu','menu'];
+      for (let k of keys) {
+        const s = localStorage.getItem(k);
+        if (s) {
+          const arr = JSON.parse(s);
+          if (Array.isArray(arr) && arr.length > 0) return arr;
+        }
+      }
+      return INITIAL_MENU_ITEMS;
+    } catch { return INITIAL_MENU_ITEMS; }
+  });
+
+  const handleFotoUpload = (e: any, idx: number) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev: any) => {
+      const base64 = ev.target.result;
+      const nova = [...lista];
+      nova[idx].image = base64;
+      nova[idx].foto = base64;
+      nova[idx].img = base64;
+      setLista(nova);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const salvar = () => {
+    const jsonMenu = JSON.stringify(lista);
+    const jsonConfig = JSON.stringify(configAgencia);
+    // Salva em TODAS as chaves possiveis
+    localStorage.setItem('menu_items', jsonMenu);
+    localStorage.setItem('agency_menu_items', jsonMenu);
+    localStorage.setItem('boas_e_limpas_menu', jsonMenu);
+    localStorage.setItem('vip_menu_items', jsonMenu);
+    localStorage.setItem('agency_config', jsonConfig);
+    localStorage.setItem('INITIAL_AGENCY_CONFIG', jsonConfig);
+    
+    if (props.onSaveConfig) {
+      // tenta salvar do jeito que o App.tsx espera
+      props.onSaveConfig({ ...configAgencia, menu: lista, modelos: lista, items: lista });
+      if (props.onSaveMenu) props.onSaveMenu(lista);
+    }
+    alert('✅ SALVO! Vai recarregar o site agora.');
+    setTimeout(() => window.location.reload(), 500);
+  };
+
+  return (
+    <div style={{position:'fixed', inset:0, background:'rgba(0,0,0,0.9)', zIndex:9999, overflowY:'auto', padding:'15px'}}>
+      <div style={{background:'#1a1a1a', maxWidth:'500px', margin:'20px auto', borderRadius:'16px', padding:'20px', color:'white'}}>
+        
+        {!autenticado ? (
+          <div>
+            <h2 style={{textAlign:'center'}}>🔒 Admin VIP</h2>
+            <input type="password" placeholder="Código" value={codigo} onChange={(e:any)=>setCodigo(e.target.value)} style={{width:'100%', padding:'15px', borderRadius:'10px', margin:'15px 0', background:'#333', color:'white', border:'1px solid #444'}} />
+            <button onClick={verificarCodigo} style={{width:'100%', padding:'15px', background:'red', borderRadius:'10px', fontWeight:'bold'}}>Entrar</button>
+            <button onClick={props.onClose} style={{width:'100%', padding:'10px', background:'#333', borderRadius:'10px', marginTop:'10px'}}>Fechar</button>
+          </div>
+        ) : (
+          <div>
+            <div style={{display:'flex', gap:'8px', marginBottom:'20px'}}>
+              <button onClick={()=>setAba('agencia')} style={{flex:1, padding:'12px', background:aba==='agencia'?'#ff0000':'#333', borderRadius:'10px', border:'none', color:'white'}}>Agência</button>
+              <button onClick={()=>setAba('fotos')} style={{flex:1, padding:'12px', background:aba==='fotos'?'#ff0000':'#333', borderRadius:'10px', border:'none', color:'white', fontWeight:'bold'}}>Fotos</button>
+              <button onClick={()=>setAba('precos')} style={{flex:1, padding:'12px', background:aba==='precos'?'#ff0000':'#333', borderRadius:'10px', border:'none', color:'white'}}>Preços</button>
+            </div>
+
+            {aba==='fotos' && (
+              <div>
+                <p style={{background:'#222', padding:'10px', borderRadius:'8px'}}>✅ Lista encontrada: ({lista.length} modelos) - FOTOS DIRETO DO CELULAR!</p>
+                {lista.map((m:any, idx:number)=>(
+                  <div key={idx} style={{border:'1px solid #333', padding:'12px', margin:'12px 0', borderRadius:'12px', background:'#222'}}>
+                    <b style={{fontSize:'16px'}}>{m.name || m.nome} - {m.price || m.preco} MT</b>
+                    {m.image && <img src={m.image} style={{width:'100%', height:'200px', objectFit:'cover', borderRadius:'10px', margin:'10px 0'}} />}
+                    <label style={{display:'block', width:'100%', background:'#ff0000', padding:'14px', borderRadius:'10px', textAlign:'center', fontWeight:'bold', cursor:'pointer'}}>
+                      📷 ESCOLHER FOTO DA GALERIA
+                      <input type="file" accept="image/*" onChange={(e)=>handleFotoUpload(e, idx)} style={{display:'none'}} />
+                    </label>
+                    <p style={{fontSize:'11px', color:'#aaa', marginTop:'6px', textAlign:'center'}}>SEM LINK! Escolhe direto do celular</p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {aba==='agencia' && <div><p>Aba agência - use a aba Fotos para trocar fotos.</p><textarea value={JSON.stringify(configAgencia, null, 2)} onChange={(e)=>{try{setConfigAgencia(JSON.parse(e.target.value))}catch{}}} style={{width:'100%', height:'200px', background:'#222', color:'white'}} /></div>}
+            {aba==='precos' && <div>{lista.map((m:any, idx:number)=><div key={idx} style={{display:'flex', gap:'10px', margin:'10px 0'}}><span style={{flex:1}}>{m.name}</span><input value={m.price} onChange={(e)=>{const n=[...lista]; n[idx].price=e.target.value; setLista(n)}} style={{width:'80px', padding:'8px', background:'#333', color:'white', borderRadius:'6px'}} /></div>)}</div>}
+
+            <div style={{display:'flex', gap:'10px', marginTop:'20px'}}>
+              <button onClick={props.onClose} style={{flex:1, padding:'16px', background:'#333', borderRadius:'12px', color:'white', border:'none'}}>Fechar</button>
+              <button onClick={salvar} style={{flex:2, padding:'16px', background:'#ff0000', borderRadius:'12px', color:'white', fontWeight:'bold', border:'none', fontSize:'16px'}}>💾 SALVAR TUDO</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+  }
