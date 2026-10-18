@@ -1,29 +1,18 @@
-// @ts-nocheck
+ // @ts-nocheck
 import { useState } from "react";
 
 export default function AdminModal({ girls, onClose, onSave, onDelete, onAdd }: any) {
   const [senha, setSenha] = useState("");
   const [logado, setLogado] = useState(false);
-  const SENHA_CORRETA = "2024"; // <-- SUA SENHA AQUI! Pode trocar!
+  const SENHA_CORRETA = "2024";
 
   if (!logado) {
     return (
       <div style={{position:'fixed', inset:0, background:'rgba(0,0,0,0.9)', zIndex:9999, display:'flex', alignItems:'center', justifyContent:'center'}}>
         <div style={{background:'#111', padding:'30px', borderRadius:'15px', border:'2px solid #ff0066', width:'90%', maxWidth:'350px'}}>
           <h2 style={{color:'#fff', textAlign:'center', marginBottom:'20px'}}>🔒 Painel Admin</h2>
-          <input 
-            type="password" 
-            placeholder="Digite a senha"
-            value={senha}
-            onChange={(e)=>setSenha(e.target.value)}
-            style={{width:'100%', padding:'15px', borderRadius:'10px', border:'1px solid #333', background:'#222', color:'#fff', fontSize:'18px'}}
-          />
-          <button 
-            onClick={()=>{ if(senha===SENHA_CORRETA) setLogado(true); else alert("Senha errada!"); }}
-            style={{width:'100%', marginTop:'15px', padding:'15px', background:'#ff0066', color:'#fff', border:'none', borderRadius:'10px', fontSize:'18px', fontWeight:'bold'}}
-          >
-            Entrar
-          </button>
+          <input type="password" placeholder="Digite a senha" value={senha} onChange={(e)=>setSenha(e.target.value)} style={{width:'100%', padding:'15px', borderRadius:'10px', border:'1px solid #333', background:'#222', color:'#fff', fontSize:'18px'}} />
+          <button onClick={()=>{ if(senha===SENHA_CORRETA) setLogado(true); else alert("Senha errada!"); }} style={{width:'100%', marginTop:'15px', padding:'15px', background:'#ff0066', color:'#fff', border:'none', borderRadius:'10px', fontSize:'18px', fontWeight:'bold'}}>Entrar</button>
           <button onClick={onClose} style={{width:'100%', marginTop:'10px', padding:'10px', background:'transparent', color:'#aaa', border:'none'}}>Fechar</button>
         </div>
       </div>
@@ -37,14 +26,11 @@ export default function AdminModal({ girls, onClose, onSave, onDelete, onAdd }: 
           <h2 style={{color:'#fff', margin:0}}>PAINEL ADMIN - {girls.length} MENINAS</h2>
           <button onClick={onClose} style={{background:'#222', color:'#fff', border:'1px solid #444', padding:'10px 20px', borderRadius:'10px'}}>X Fechar</button>
         </div>
-
         <div style={{display:'flex', gap:'10px', marginBottom:'15px'}}>
           <button style={{background:'#ff0066', color:'#fff', padding:'10px 20px', borderRadius:'10px', border:'none', fontWeight:'bold'}}>Catálogo ({girls.length})</button>
           <button style={{background:'#222', color:'#fff', padding:'10px 20px', borderRadius:'10px', border:'1px solid #444'}}>Config</button>
         </div>
-
         <button onClick={onAdd} style={{width:'100%', background:'#00c67a', color:'#fff', padding:'15px', borderRadius:'10px', border:'none', fontWeight:'bold', fontSize:'16px', marginBottom:'20px'}}>+ Adicionar Menina</button>
-
         {girls.map((g:any, i:number)=>(
           <div key={i} style={{display:'flex', justifyContent:'space-between', alignItems:'center', background:'#1a1a1a', border:'1px solid #333', padding:'12px', borderRadius:'10px', marginBottom:'10px'}}>
             <span style={{color:'#fff', fontWeight:'bold'}}>{i+1}. {g.nome || g.name}</span>
@@ -57,4 +43,4 @@ export default function AdminModal({ girls, onClose, onSave, onDelete, onAdd }: 
       </div>
     </div>
   );
-          }
+            }
