@@ -1,13 +1,7 @@
-import { useEffect } from "react";
-
-export function AdminModal({ isOpen, open, onClose, children }: any) {
-  const visivel = isOpen ?? open ?? false;
-  
-  useEffect(() => {
-    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape' && onClose) onClose(); };
-    window.addEventListener('keydown', esc);
-    return () => window.removeEventListener('keydown', esc);
-  }, [onClose]);
+export function AdminModal(props: any) {
+  const visivel = props.isOpen ?? props.open ?? false;
+  const onClose = props.onClose;
+  const children = props.children;
 
   if (!visivel) return null;
 
@@ -15,14 +9,14 @@ export function AdminModal({ isOpen, open, onClose, children }: any) {
     <div 
       onClick={onClose}
       style={{
-        position:'fixed', inset:0, zIndex:999999,
+        position:'fixed', inset:'0', zIndex:999999,
         background:'rgba(0,0,0,0.85)',
         display:'flex', alignItems:'center', justifyContent:'center',
         padding:'16px'
       }}
     >
       <div 
-        onClick={(e)=>e.stopPropagation()}
+        onClick={(e: any)=>e.stopPropagation()}
         style={{
           background:'#151515', width:'100%', maxWidth:'520px',
           borderRadius:'16px', padding:'20px',
@@ -40,17 +34,10 @@ export function AdminModal({ isOpen, open, onClose, children }: any) {
             }}
           >X</button>
         </div>
-
         {children ? children : (
-          <div style={{color:'#ccc', fontSize:'14px', lineHeight:'1.5'}}>
-            <p>✅ Agora o painel fecha!</p>
-            <p>• Clique no <b style={{color:'white'}}>X vermelho</b></p>
-            <p>• Clique fora da caixa preta</p>
-            <p>• Aperte ESC no teclado</p>
-            <div style={{marginTop:'20px', padding:'12px', background:'#222', borderRadius:'8px'}}>
-              Aqui você vai trocar fotos e preços. Se me mandar o arquivo App.tsx eu já coloco os campos de edição aqui dentro.
-            </div>
-            <button onClick={onClose} style={{marginTop:'20px', width:'100%', padding:'14px', background:'white', color:'black', border:'none', borderRadius:'10px', fontWeight:'bold', cursor:'pointer'}}>Fechar Painel</button>
+          <div style={{color:'#ccc', fontSize:'14px'}}>
+            <p>Painel funcionando! Clique no X pra fechar.</p>
+            <button onClick={onClose} style={{marginTop:'15px', width:'100%', padding:'14px', background:'white', color:'black', border:'none', borderRadius:'10px', fontWeight:'bold'}}>Fechar Painel</button>
           </div>
         )}
       </div>
