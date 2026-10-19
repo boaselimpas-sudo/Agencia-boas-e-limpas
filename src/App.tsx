@@ -69,9 +69,9 @@ export default function App() {
           };
         });
       }
-      return INITIAL_MENU_ITEMS;
+      return [];
     } catch {
-      return INITIAL_MENU_ITEMS;
+      return [];
     }
   });
 
