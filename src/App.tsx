@@ -13,8 +13,7 @@ import { AdminModal } from './components/AdminModal'
 import { VideoModal } from './components/VideoModal'
 import { SubscriptionModal } from './components/SubscriptionModal'
 import { AgeGate } from './components/AgeGate'
-import { INITIAL_AGENCY_CONFIG, INITIAL_MENU_ITEMS } from './data/initialData'
-import { saveMediaFile } from './utils/mediaStorage'
+
 
 // ============ APP LIMPO ============
 export default function App() {
