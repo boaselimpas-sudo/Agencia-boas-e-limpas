@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-export const AdminModal = ({ isOpen, onClose, onSave, onDelete, editingItem }: any) => {
+export const AdminModal = ({ isOpen, onClose, onSave, onDelete, editingItem, addItem, saveItem }: any) => {
   const [form, setForm] = useState({ name:"", price:"4000", idade:"22", altura:"1.65", servicos:"", description:"", disponivel:true, images:[] as string[], videos:[] as string[] });
   useEffect(()=>{
     if(editingItem){ setForm({ name:editingItem.name||"", price:String(editingItem.price||4000), idade:String(editingItem.idade||22), altura:editingItem.altura||"1.65", servicos:editingItem.servicos||"", description:editingItem.description||"", disponivel:editingItem.disponivel!==false, images:editingItem.images||[], videos:editingItem.videos||[] }); }
@@ -23,6 +23,28 @@ export const AdminModal = ({ isOpen, onClose, onSave, onDelete, editingItem }: a
       else{ const r=new FileReader(); r.onload=(ev:any)=>setForm(p=>({...p, videos:[...p.videos, ev.target.result]})); r.readAsDataURL(f); }
     }
   };
+  const doSave = ()=>{
+    if(!form.name||form.images.length===0){ alert("Nome + 1 foto!"); return; }
+    const newItem = { id:editingItem?.id||Date.now(), name:form.name, title:form.name, price:Number(form.price), idade:Number(form.idade), altura:form.altura, servicos:form.servicos, description:form.description, disponivel:form.disponivel, images:form.images, videos:form.videos, image:form.images[0] };
+    try{
+      // tenta todas as funções possíveis
+      if(typeof onSave==="function") onSave(newItem);
+      else if(typeof saveItem==="function") saveItem(newItem);
+      else if(typeof addItem==="function") addItem(newItem);
+      else {
+        // fallback salva direto
+        const key = localStorage.getItem("agencia_girls") ? "agencia_girls" : localStorage.getItem("menuItems") ? "menuItems" : "agencia_girls";
+        const existing = JSON.parse(localStorage.getItem(key) || "[]");
+        const idx = existing.findIndex((x:any)=>x.id===newItem.id);
+        if(idx>=0) existing[idx]=newItem; else existing.push(newItem);
+        localStorage.setItem(key, JSON.stringify(existing));
+        localStorage.setItem("girls", JSON.stringify(existing));
+        localStorage.setItem("menuItems", JSON.stringify(existing));
+      }
+      onClose();
+      setTimeout(()=>window.location.reload(), 300);
+    }catch(e:any){ alert("Erro ao salvar: "+e.message); }
+  };
   return(
     <div style={{position:"fixed", inset:0, background:"rgba(0,0,0,0.9)", zIndex:9999, display:"flex", alignItems:"center", justifyContent:"center", padding:"10px", overflowY:"auto"}}>
       <div style={{background:"#1a1a1a", borderRadius:"16px", padding:"16px", width:"100%", maxWidth:"500px", maxHeight:"95vh", overflowY:"auto"}}>
@@ -30,10 +52,10 @@ export const AdminModal = ({ isOpen, onClose, onSave, onDelete, editingItem }: a
         <input value={form.name} onChange={e=>setForm({...form, name:e.target.value})} placeholder="Nome" style={{width:"100%", padding:"10px", borderRadius:"8px", background:"#222", color:"white", border:"1px solid #444", marginBottom:"6px"}}/>
         <div style={{display:"flex", gap:"6px", marginBottom:"6px"}}>
           <input type="text" value={form.idade} onChange={e=>setForm({...form, idade:e.target.value.replace(/\D/g,"")})} placeholder="Idade" style={{flex:1, padding:"10px", borderRadius:"8px", background:"#222", color:"white", border:"1px solid #444"}}/>
-          <input value={form.altura} onChange={e=>setForm({...form, altura:e.target.value})} placeholder="Altura 1.65" style={{flex:1, padding:"10px", borderRadius:"8px", background:"#222", color:"white", border:"1px solid #444"}}/>
+          <input value={form.altura} onChange={e=>setForm({...form, altura:e.target.value})} placeholder="Altura" style={{flex:1, padding:"10px", borderRadius:"8px", background:"#222", color:"white", border:"1px solid #444"}}/>
           <input type="text" value={form.price} onChange={e=>setForm({...form, price:e.target.value.replace(/\D/g,"")})} placeholder="Preço" style={{flex:1, padding:"10px", borderRadius:"8px", background:"#222", color:"white", border:"1px solid #444"}}/>
         </div>
-        <input value={form.servicos} onChange={e=>setForm({...form, servicos:e.target.value})} placeholder="Serviços: Oral, Anal" style={{width:"100%", padding:"10px", borderRadius:"8px", background:"#222", color:"white", border:"1px solid #444", marginBottom:"6px"}}/>
+        <input value={form.servicos} onChange={e=>setForm({...form, servicos:e.target.value})} placeholder="Serviços" style={{width:"100%", padding:"10px", borderRadius:"8px", background:"#222", color:"white", border:"1px solid #444", marginBottom:"6px"}}/>
         <select value={form.disponivel ? "sim":"nao"} onChange={e=>setForm({...form, disponivel:e.target.value==="sim"})} style={{width:"100%", padding:"10px", borderRadius:"8px", background:"#222", color:"white", border:"1px solid #444", marginBottom:"8px"}}>
           <option value="sim">✅ Disponível</option><option value="nao">🔴 Ocupada</option>
         </select>
@@ -45,7 +67,7 @@ export const AdminModal = ({ isOpen, onClose, onSave, onDelete, editingItem }: a
         <textarea value={form.description} onChange={e=>setForm({...form, description:e.target.value})} placeholder="Descrição..." style={{width:"100%", padding:"8px", borderRadius:"8px", background:"#222", color:"white", border:"1px solid #444", minHeight:"40px", marginBottom:"10px"}}/>
         <div style={{display:"flex", gap:"6px"}}>
           <button onClick={onClose} style={{flex:1, padding:"11px", borderRadius:"20px", background:"#333", color:"white", border:"none"}}>Cancelar</button>
-          <button onClick={()=>{ if(!form.name||form.images.length===0){ alert("Nome + 1 foto!"); return; } try{ onSave({ id:editingItem?.id||Date.now(), name:form.name, title:form.name, price:Number(form.price), idade:Number(form.idade), altura:form.altura, servicos:form.servicos, description:form.description, disponivel:form.disponivel, images:form.images, videos:form.videos, image:form.images[0] }); onClose(); }catch(e:any){ alert("Erro: "+e.message); } }} style={{flex:2, padding:"11px", borderRadius:"20px", background:"#dc2626", color:"white", border:"none", fontWeight:"bold"}}>💾 Salvar</button>
+          <button onClick={doSave} style={{flex:2, padding:"11px", borderRadius:"20px", background:"#dc2626", color:"white", border:"none", fontWeight:"bold"}}>💾 Salvar Agora</button>
         </div>
       </div>
     </div>
