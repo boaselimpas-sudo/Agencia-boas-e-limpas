@@ -1,31 +1,62 @@
 import React, { useState } from "react";
+
 export const MenuSection: any = (props: any) => {
   const [showPay, setShowPay] = useState(false);
-  const [paid, setPaid] = useState(()=>typeof window!=="undefined" && localStorage.getItem("menu_paid")!==null);
+  const [paid, setPaid] = useState(()=> (typeof window !== 'undefined' ? localStorage.getItem('paid')==='true' : false));
   const items = props.items || [];
+
   return (
-    <section id="menu" style={{padding:"20px"}}>
-      <h2 style={{color:"white", fontSize:"20px", fontWeight:"bold"}}>Garotas ({items.length})</h2>
-      <div style={{display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(150px, 1fr))", gap:"12px", marginTop:"12px"}}>
-        {items.map((item:any,i:number)=>{
-          const foto=item.images?.[0]||item.image||"";
-          const disponivel=item.disponivel!==false;
-          return(
-            <div key={i} style={{background:"#222", borderRadius:"12px", overflow:"hidden", border:"1px solid #333"}}>
-              <div style={{height:"200px", background:"#111", position:"relative"}}>
-                {foto ? <img src={foto} style={{width:"100%", height:"100%", objectFit:"cover", filter: paid ? "none":"blur(12px)"}}/> : <div style={{color:"#555", textAlign:"center", paddingTop:"80px"}}>Sem foto</div>}
-                {!paid && <div style={{position:"absolute", inset:0, background:"rgba(0,0,0,0.4)", display:"flex", alignItems:"center", justifyContent:"center"}}><span style={{background:"#7f1d1d", width:"40px", height:"40px", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center"}}>🔒</span></div>}
-                <div style={{position:"absolute", top:"5px", left:"5px", background: disponivel ? "green":"red", color:"white", fontSize:"10px", padding:"2px 6px", borderRadius:"10px"}}>{disponivel ? "● Disponível":"● Ocupada"}</div>
-                {paid && <div style={{position:"absolute", bottom:"5px", left:"5px", background:"rgba(0,0,0,0.7)", color:"white", fontSize:"9px", padding:"2px 5px", borderRadius:"8px"}}>{item.idade||22}a • {item.altura||"1.65"}m</div>}
+    <section id="menu" className="py-12 px-4 bg-[#0a0a0a]">
+      <div className="max-w-6xl mx-auto">
+        <h2 className="text-3xl font-bold text-white mb-2">Catálogo VIP</h2>
+        <p className="text-zinc-400 mb-6">Prestadoras disponíveis em Matola & Maputo</p>
+
+        {/* Filtros */}
+        <div className="flex gap-2 overflow-x-auto mb-6 pb-2">
+          <button className="bg-red-600 text-white px-5 py-2 rounded-full text-sm font-bold whitespace-nowrap">Todos</button>
+          <button className="bg-zinc-800 text-zinc-300 border border-zinc-700 px-5 py-2 rounded-full text-sm whitespace-nowrap">Limpeza Residencial</button>
+          <button className="bg-zinc-800 text-zinc-300 border border-zinc-700 px-5 py-2 rounded-full text-sm whitespace-nowrap">VIP</button>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {items.map((item:any, i:number)=>{
+            const foto = item.images?.[0] || item.foto || item.image;
+            const disponivel = item.disponivel !== false;
+            return(
+              <div key={i} className="group bg-zinc-800/80 backdrop-blur border border-zinc-700/50 rounded-[24px] overflow-hidden shadow-xl hover:shadow-2xl hover:border-red-600/30 transition-all duration-300">
+                <div className="relative h-[180px] overflow-hidden bg-zinc-900">
+                  {foto ? <img src={foto} className="w-full h-full object-cover group-hover:scale-110 transition duration-500" /> : <div className="w-full h-full flex items-center justify-center text-zinc-600">Sem foto</div>}
+                  
+                  <span className="absolute top-3 right-3 bg-red-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-lg">VIP ☆</span>
+                  
+                  {!paid && (
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-[6px] flex items-center justify-center">
+                      <button onClick={()=>setShowPay(true)} className="bg-white text-black text-xs font-bold px-3 py-1.5 rounded-full">Desbloquear 🔒</button>
+                    </div>
+                  )}
+                  
+                  {paid && !disponivel && (
+                    <div className="absolute bottom-2 left-2 bg-red-600 text-white text-[10px] px-2 py-1 rounded-full">Indisponível</div>
+                  )}
+                </div>
+
+                <div className="p-4">
+                  <p className="text-white font-bold text-[15px] leading-tight truncate">{item.nome || item.name || 'Prestadora'}</p>
+                  <p className="text-red-300/80 text-xs mt-1 flex items-center gap-1">📍 {item.local || item.location || 'Matola'}</p>
+                  
+                  <div className="flex items-center gap-1 mt-2">
+                    <span className="text-yellow-500 text-xs">★★★★★</span>
+                    <span className="text-white text-xs font-bold">{item.rating || '4.8'}</span>
+                    <span className="text-zinc-500 text-[10px]">({item.avaliacoes || '124'})</span>
+                  </div>
+
+                  <p className="text-red-500 font-bold text-sm mt-2.5">Desde {item.preco || item.price || '1.200'} MT</p>
+                  <p className="text-zinc-500 text-[10px]">por serviço</p>
+                </div>
               </div>
-              <div style={{padding:"8px"}}>
-                <p style={{color:"white", fontWeight:"bold", fontSize:"13px"}}>{item.name}</p>
-                <p style={{color:"#aaa", fontSize:"10px"}}>{item.servicos||""}</p>
-                <p style={{color:"#4ade80", fontSize:"12px"}}>{item.price} MZN</p>
-              </div>
-            </div>
-          );
-        })}
+            )
+          })}
+        </div>
       </div>
     </section>
   );
